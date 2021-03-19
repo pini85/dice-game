@@ -5,12 +5,15 @@ const Player = ({
   playerData: { currentScore, globalScore, wins },
   player,
   playersTurn,
+  winner,
   ...props
 }) => {
   const activeStyle = player === playersTurn ? "active" : null;
+  const playerName =
+    player === playersTurn && winner ? "WINNER!!!" : `player ${player + 1}`;
   return (
     <div className={`player-container ${activeStyle}`}>
-      <div className={`player-name ${activeStyle}`}> PLAYER {player}</div>
+      <div className={`player-name ${activeStyle}`}>{playerName} </div>
       <GlobalScore score={globalScore} />
       <CurrentScore score={currentScore} />
     </div>
