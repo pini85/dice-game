@@ -8,7 +8,7 @@ const Player = ({
   winner,
   ...props
 }) => {
-  const activeStyle = player === playersTurn ? "active" : null;
+  const activeStyle = player === playersTurn ? "active" : "";
   const playerName =
     player === playersTurn && winner ? "WINNER!!!" : `player ${player + 1}`;
   return (

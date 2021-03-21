@@ -5,7 +5,7 @@ const Dice = ({ dices }) => {
       const value = dices.map((die) => {
         return (
           <img
-            src={require(`../../static/images/dice-${die}.png`).default}
+            src={require(`../../assets/images/dice-${die}.png`).default}
             alt="die"
           />
         );
