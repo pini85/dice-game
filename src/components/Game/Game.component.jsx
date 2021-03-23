@@ -1,9 +1,11 @@
-import React from "react";
+import React, { Fragment } from "react";
 import "./game.styles.css";
 
 import Player from "../Player/Player.component";
 import OptionsContainer from "../OptionsContainer/OptionsContainer.component";
 import Dice from "../Dice/Dice.component";
+
+import { defaultArr, nextTurn } from "../../utils/helperFunctions";
 
 class Game extends React.Component {
   state = {
@@ -15,37 +17,33 @@ class Game extends React.Component {
       {
         currentScore: 0,
         globalScore: 0,
-        wins: 0,
       },
       {
         currentScore: 0,
         globalScore: 0,
-        wins: 0,
       },
     ],
   };
 
   handleDices = () => {
+    const { players, playersTurn } = this.state;
     const diceValues = this.state.dices.map((die) => {
       return Math.floor(Math.random() * 6) + 1;
     });
 
-    const players = [...this.state.players];
-    players[this.state.playersTurn].currentScore += diceValues.reduce(
+    const playersObj = [...players];
+    playersObj[playersTurn].currentScore += diceValues.reduce(
       (val, acc) => val + acc
     );
 
     const doubles = diceValues.every((die) => die === diceValues[0]);
     if (doubles) {
-      players[this.state.playersTurn].currentScore = 0;
-      const nextPlayer =
-        this.state.playersTurn === this.state.players.length - 1
-          ? 0
-          : this.state.playersTurn + 1;
+      playersObj[playersTurn].currentScore = 0;
 
       return this.setState({
-        playersTurn: nextPlayer,
-        dices: [null, null],
+        playersTurn: nextTurn(playersTurn, players.length - 1),
+        dices: defaultArr(this.state.dices.length, null),
+        players,
       });
     }
 
@@ -53,27 +51,30 @@ class Game extends React.Component {
   };
 
   handleHold = () => {
-    const players = [...this.state.players];
+    const { players, playersTurn, pointsToWin } = this.state;
+    const playersObj = [...players];
 
-    players[this.state.playersTurn].globalScore +=
-      players[this.state.playersTurn].currentScore;
+    playersObj[playersTurn].globalScore += playersObj[playersTurn].currentScore;
 
-    players[this.state.playersTurn].currentScore = 0;
+    players[playersTurn].currentScore = 0;
 
-    const nextPlayer =
-      this.state.playersTurn === this.state.players.length - 1
-        ? 0
-        : this.state.playersTurn + 1;
-
-    if (players[this.state.playersTurn].globalScore >= this.state.pointsToWin) {
-      return this.setState({ players, winner: true, dices: [null, null] });
+    if (playersObj[playersTurn].globalScore >= pointsToWin) {
+      return this.setState({
+        players,
+        winner: true,
+        dices: defaultArr(this.state.dices.length, null),
+      });
     }
-    this.setState({ players, playersTurn: nextPlayer, dices: [null, null] });
+    this.setState({
+      players,
+      playersTurn: nextTurn(playersTurn, players.length - 1),
+      dices: defaultArr(this.state.dices.length, null),
+    });
   };
 
   handleNewGame = () => {
     this.setState({
-      dices: [null, null],
+      dices: defaultArr(this.state.dices.length, null),
       playersTurn: 0,
       winner: false,
       players: [
@@ -97,16 +98,17 @@ class Game extends React.Component {
 
   render() {
     const renderPlayers = () => {
+      const { playersTurn, winner } = this.state;
       return this.state.players.map((player, i) => {
         return (
-          <React.Fragment key={i}>
+          <Fragment key={i}>
             <Player
               playerData={player}
               player={i}
-              playersTurn={this.state.playersTurn}
-              winner={this.state.winner}
+              playersTurn={playersTurn}
+              winner={winner}
             />
-          </React.Fragment>
+          </Fragment>
         );
       });
     };

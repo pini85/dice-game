@@ -1,13 +1,17 @@
 import "./dice.styles.css";
+import React, { Fragment } from "react";
+
 const Dice = ({ dices }) => {
   const renderDices = () => {
     if (dices[0]) {
-      const value = dices.map((die) => {
+      const value = dices.map((die, i) => {
         return (
-          <img
-            src={require(`../../assets/images/dice-${die}.png`).default}
-            alt="die"
-          />
+          <Fragment key={i}>
+            <img
+              src={require(`../../assets/images/dice-${die}.png`).default}
+              alt="die"
+            />
+          </Fragment>
         );
       });
       return value;

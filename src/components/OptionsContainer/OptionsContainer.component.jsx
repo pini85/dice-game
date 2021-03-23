@@ -14,7 +14,7 @@ const OptionsContainer = ({
     { title: "roll dice", icon: "change_circle" },
     { title: "hold", icon: "arrow_downward" },
   ];
-  const propOption = (title) => {
+  const callbackOption = (title) => {
     switch (title) {
       case "new game":
         return handleNewGame;
@@ -31,7 +31,7 @@ const OptionsContainer = ({
           <Option
             title={option.title}
             icon={option.icon}
-            handleCallBack={propOption(option.title)}
+            handleCallBack={callbackOption(option.title)}
             winner={winner}
             doNotDisable={option.doNotDisable}
           />
@@ -43,6 +43,7 @@ const OptionsContainer = ({
     <div className="options-container">
       {renderOptions()}
       <Input
+        type="number"
         placeholder={"final score"}
         handlePointsToWin={handlePointsToWin}
       />
